@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cat Bingo | Azores Edition</title>
+    <meta
+      name="description"
+      content="A cat-spotting bingo game for the Azores."
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app" class="app-root">
+      <section id="landing-screen" class="screen landing-screen" aria-label="Cat Bingo landing screen">
+        <div class="landing-icon" aria-hidden="true">
+          <span class="landing-icon-inner">🐾</span>
+        </div>
+
+        <div class="landing-copy">
+          <h1 class="landing-title">Cat Bingo</h1>
+          <p class="landing-subtitle">Azores Edition</p>
+        </div>
+        <button id="play-button" type="button" class="play-button">Play</button>
+      </section>
+
+      <main id="game-screen" class="screen app-shell" aria-label="Cat Bingo board screen">
+        <section class="board-wrapper">
+          <div class="board-header" aria-hidden="true">
+            <span>B</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+            <span>O</span>
+          </div>
+          <div id="board" class="board" aria-label="Bingo board"></div>
+        </section>
+        <button id="board-new-game" type="button" class="board-new-game">New Game</button>
+      </main>
+
+      <div id="bingo-overlay" class="bingo-overlay" aria-hidden="true">
+        <span class="bingo-overlay-text">Bingo!</span>
+      </div>
+
+      <div id="new-game-confirmation" class="confirmation-modal hidden" aria-hidden="true">
+        <div class="confirmation-backdrop"></div>
+        <div class="confirmation-dialog" role="dialog" aria-modal="true" aria-labelledby="new-game-confirmation-title">
+          <h2 id="new-game-confirmation-title">Are you sure you want to start a new game?</h2>
+          <div class="confirmation-actions">
+            <button id="new-game-cancel" type="button" class="result-button result-button-secondary">Cancel</button>
+            <button id="new-game-confirm" type="button" class="result-button result-button-primary">Ok</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="cell-detail-modal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close="true"></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+          <h2 id="detail-title">Item title</h2>
+          <img class="modal-image" src="/assets/cats/orange%20cat.png" alt="Orange cat" />
+          <button id="detail-toggle" type="button" class="modal-action">Mark as complete</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
