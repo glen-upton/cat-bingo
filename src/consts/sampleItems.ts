@@ -23,7 +23,7 @@ export const SAMPLE_ITEMS: BingoOption[] = [
   { id: 'on-stone-wall', title: 'On a stone wall', imageSrc: catAsset('cat%20on%20a%20stone%20wall.jpg') },
   { id: 'in-garden', title: 'In a garden', imageSrc: catAsset('in%20a%20garden.jpg') },
   { id: 'near-hydrangeas', title: 'Near Hydrangeas', imageSrc: catAsset('cat%20near%20hydrangeas.jpg') },
-  { id: 'under-parked-car', title: 'Under a parked car', imageSrc: SHARED_CAT_IMAGE },
+  { id: 'under-parked-car', title: 'Under a parked car', imageSrc: catAsset('cat%20under%20car.png') },
   { id: 'belly-up', title: 'Belly-up', imageSrc: catAsset('cat%20on%20its%20back.jpg') },
   { id: 'fighting', title: 'Fighting', imageSrc: catAsset('cats%20fighting.jpg') },
   { id: 'blue-eyes', title: 'Blue eyes', imageSrc: catAsset('blue%20eyed%20cat.jpg') },
@@ -49,5 +49,5 @@ export const SAMPLE_ITEMS: BingoOption[] = [
   { id: 'in-a-window', title: 'In a window', imageSrc: catAsset('cat%20in%20a%20window.jpg') },
   { id: 'chasing-tail', title: 'Chasing its tail', imageSrc: SHARED_CAT_IMAGE },
   { id: 'bird-watching', title: 'Watching a bird', imageSrc: SHARED_CAT_IMAGE },
-  { id: 'on-a-car', title: 'On a car', imageSrc: SHARED_CAT_IMAGE },
+  { id: 'on-a-car', title: 'On a car', imageSrc: catAsset('cat%20on%20a%20car.png') },
 ];
