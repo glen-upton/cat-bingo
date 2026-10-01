@@ -6,6 +6,7 @@ export class BingoDetailModal {
   private readonly imageElement: HTMLImageElement;
   private readonly toggleButton: HTMLButtonElement;
   private readonly backdropElement: HTMLElement;
+  private readonly imageLoadPromises = new Map<string, Promise<void>>();
   private currentCell: BingoCell | null = null;
   private onToggle: ((cellId: string) => void) | null = null;
   private closeTimer: number | null = null;
@@ -26,6 +27,8 @@ export class BingoDetailModal {
     this.modalElement = modalElement;
     this.titleElement = titleElement;
     this.imageElement = imageElement;
+    this.imageElement.decoding = 'async';
+    this.imageElement.loading = 'eager';
     this.toggleButton = toggleButton;
     this.backdropElement = backdropElement;
   }
@@ -44,7 +47,31 @@ export class BingoDetailModal {
     });
   }
 
-  public open(cell: BingoCell): void {
+  public preloadImage(src: string): Promise<void> {
+    const cached = this.imageLoadPromises.get(src);
+    if (cached) {
+      return cached;
+    }
+
+    const promise = new Promise<void>((resolve) => {
+      const preloadImage = new Image();
+      preloadImage.decoding = 'async';
+      preloadImage.onload = () => resolve();
+      preloadImage.onerror = () => resolve();
+      preloadImage.src = src;
+    });
+
+    this.imageLoadPromises.set(src, promise);
+    return promise;
+  }
+
+  public preloadImages(srcs: string[]): void {
+    srcs.forEach((src) => {
+      void this.preloadImage(src);
+    });
+  }
+
+  public async open(cell: BingoCell): Promise<void> {
     if (this.closeTimer !== null) {
       window.clearTimeout(this.closeTimer);
       this.closeTimer = null;
@@ -52,14 +79,22 @@ export class BingoDetailModal {
 
     this.currentCell = cell;
     this.titleElement.textContent = cell.text;
-    this.imageElement.src = cell.imageSrc;
     this.imageElement.alt = cell.text;
+    this.imageElement.removeAttribute('src');
     this.modalElement.classList.remove('hidden');
     this.modalElement.setAttribute('aria-hidden', 'false');
-    requestAnimationFrame(() => this.modalElement.classList.add('is-visible'));
+
+    try {
+      await this.preloadImage(cell.imageSrc);
+    } catch {
+      // Intentionally ignore image load failures so the modal still opens.
+    }
+
+    this.imageElement.src = cell.imageSrc;
 
     if (cell.isFree) {
       this.toggleButton.hidden = true;
+      requestAnimationFrame(() => this.modalElement.classList.add('is-visible'));
       return;
     }
 
@@ -67,6 +102,7 @@ export class BingoDetailModal {
     this.toggleButton.textContent = cell.marked ? 'Unmark As Seen' : 'Mark As Seen';
     this.toggleButton.classList.toggle('is-undo', cell.marked);
     this.toggleButton.classList.toggle('is-complete', !cell.marked);
+    requestAnimationFrame(() => this.modalElement.classList.add('is-visible'));
   }
 
   public close(): void {

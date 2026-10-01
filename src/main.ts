@@ -1,3 +1,4 @@
+import { SAMPLE_ITEMS } from './consts/sampleItems';
 import { BingoManager } from './managers/BingoManager';
 import { BingoDetailModal } from './ui/BingoDetailModal';
 import { NewGameConfirmationModal } from './ui/NewGameConfirmationModal';
@@ -28,6 +29,8 @@ const detailModal = new BingoDetailModal({
   toggleButton: modalToggleButton,
   backdropElement: modalBackdropElement,
 });
+
+detailModal.preloadImages(SAMPLE_ITEMS.map((item) => item.imageSrc));
 
 const newGameConfirmationModal = new NewGameConfirmationModal({
   modalElement: confirmationModalElement,
