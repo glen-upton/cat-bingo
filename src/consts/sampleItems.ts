@@ -47,7 +47,7 @@ export const SAMPLE_ITEMS: BingoOption[] = [
   { id: 'on-roof', title: 'On a roof', imageSrc: catAsset('cat%20on%20a%20roof.jpg') },
   { id: 'in-a-box', title: 'In a box', imageSrc: catAsset('cat%20in%20a%20box.jpg') },
   { id: 'in-a-window', title: 'In a window', imageSrc: catAsset('cat%20in%20a%20window.jpg') },
-  { id: 'chasing-tail', title: 'Chasing its tail', imageSrc: SHARED_CAT_IMAGE },
-  { id: 'bird-watching', title: 'Watching a bird', imageSrc: SHARED_CAT_IMAGE },
+  { id: 'chasing-tail', title: 'Chasing its tail', imageSrc: catAsset('cay%20chasing%20tail.png') },
+  { id: 'bird-watching', title: 'Watching a bird', imageSrc: catAsset('cat%20watching%20birds.png') },
   { id: 'on-a-car', title: 'On a car', imageSrc: catAsset('cat%20on%20a%20car.png') },
 ];
