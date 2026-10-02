@@ -45,6 +45,15 @@ if (!landingScreen || !gameScreen || !playButton || !boardElement || !boardNewGa
   throw new Error('Required UI elements were not found.');
 }
 
+const syncAppHeight = (): void => {
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', `${viewportHeight}px`);
+};
+
+syncAppHeight();
+window.addEventListener('resize', syncAppHeight, { passive: true });
+window.visualViewport?.addEventListener('resize', syncAppHeight, { passive: true });
+
 const detailModal = new BingoDetailModal({
   modalElement,
   titleElement: modalTitleElement,
