@@ -1,8 +1,8 @@
-import { SAMPLE_ITEMS } from '../consts/sampleItems';
+import { createElement, PawPrint } from 'lucide';
 import { BingoBoard } from '../models/BingoBoard';
 import { GameStorage } from '../storage/GameStorage';
 import { BingoDetailModal } from '../ui/BingoDetailModal';
-import { NewGameConfirmationModal } from '../ui/NewGameConfirmationModal';
+import { ConfirmationModal } from '../ui/ConfirmationModal';
 
 export class BingoManager {
   private readonly gameStorage: GameStorage;
@@ -10,29 +10,31 @@ export class BingoManager {
   private readonly bingoOverlayElement: HTMLElement;
   private readonly detailModal: BingoDetailModal;
   private readonly boardNewGameButton: HTMLButtonElement;
-  private readonly newGameConfirmationModal: NewGameConfirmationModal;
+  private readonly newGameConfirmationModal: ConfirmationModal;
   private board: BingoBoard;
 
   constructor({
+    gameStorage,
     boardElement,
     bingoOverlayElement,
     detailModal,
     boardNewGameButton,
     newGameConfirmationModal,
   }: {
+    gameStorage: GameStorage;
     boardElement: HTMLDivElement;
     bingoOverlayElement: HTMLElement;
     detailModal: BingoDetailModal;
     boardNewGameButton: HTMLButtonElement;
-    newGameConfirmationModal: NewGameConfirmationModal;
+    newGameConfirmationModal: ConfirmationModal;
   }) {
-    this.gameStorage = new GameStorage();
+    this.gameStorage = gameStorage;
     this.boardElement = boardElement;
     this.bingoOverlayElement = bingoOverlayElement;
     this.detailModal = detailModal;
     this.boardNewGameButton = boardNewGameButton;
     this.newGameConfirmationModal = newGameConfirmationModal;
-    this.board = BingoBoard.createFromItems(SAMPLE_ITEMS);
+    this.board = BingoBoard.createFromItems(this.gameStorage.getVisibleOptions());
   }
 
   public initialize(): void {
@@ -56,7 +58,8 @@ export class BingoManager {
     this.boardElement.classList.add('is-refreshing');
 
     window.setTimeout(() => {
-      this.board = BingoBoard.createFromItems(SAMPLE_ITEMS);
+      const visibleOptions = this.gameStorage.getVisibleOptions();
+      this.board = BingoBoard.createFromItems(visibleOptions);
       this.gameStorage.save(this.board);
       this.render();
       requestAnimationFrame(() => this.boardElement.classList.remove('is-refreshing'));
@@ -97,29 +100,41 @@ export class BingoManager {
   }
 
   private loadBoard(): BingoBoard {
-    return this.gameStorage.load() ?? BingoBoard.createFromItems(SAMPLE_ITEMS);
+    const savedBoard = this.gameStorage.load();
+    if (savedBoard) {
+      return savedBoard;
+    }
+
+    return BingoBoard.createFromItems(this.gameStorage.getVisibleOptions());
   }
 
   private render(): void {
     this.boardElement.innerHTML = '';
 
     this.board.cells.forEach((cell) => {
-      const cellButton = document.createElement('button');
-      cellButton.type = 'button';
-      cellButton.className = `cell ${cell.marked ? 'marked' : ''} ${cell.isFree ? 'free' : ''}`;
-      const cellLabel = document.createElement('span');
-      cellLabel.className = 'cell-label';
-      cellLabel.textContent = cell.text;
-      cellButton.appendChild(cellLabel);
-      cellButton.title = cell.text;
-      cellButton.setAttribute('aria-label', `${cell.text} ${cell.marked ? 'selected' : 'not selected'}`);
-      cellButton.setAttribute('aria-pressed', String(cell.marked));
-
-      if (!cell.isFree) {
+      const cellElement = cell.isFree ? document.createElement('div') : document.createElement('button');
+      cellElement.className = `cell ${cell.marked ? 'marked' : ''} ${cell.isFree ? 'free' : ''}`;
+      if (cell.isFree) {
+        const freeIcon = createElement(PawPrint, { 'aria-hidden': 'true' });
+        freeIcon.classList.add('free-cell-icon');
+        cellElement.appendChild(freeIcon);
+        cellElement.setAttribute('role', 'img');
+        cellElement.setAttribute('aria-label', 'Free space');
+        cellElement.title = 'Free space';
+      } else {
+        const cellButton = cellElement as HTMLButtonElement;
+        cellButton.type = 'button';
+        const cellLabel = document.createElement('span');
+        cellLabel.className = 'cell-label';
+        cellLabel.textContent = cell.text;
+        cellButton.appendChild(cellLabel);
+        cellButton.title = cell.text;
+        cellButton.setAttribute('aria-label', `${cell.text} ${cell.marked ? 'selected' : 'not selected'}`);
+        cellButton.setAttribute('aria-pressed', String(cell.marked));
         cellButton.addEventListener('click', () => this.openCellDetails(cell.id));
       }
 
-      this.boardElement.appendChild(cellButton);
+      this.boardElement.appendChild(cellElement);
     });
   }
 }

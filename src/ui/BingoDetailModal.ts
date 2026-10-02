@@ -1,4 +1,5 @@
 import { BingoCell } from '../models/BingoCell';
+import { PLACEHOLDER_CAT_IMAGE } from '../consts/sampleItems';
 
 export class BingoDetailModal {
   private readonly modalElement: HTMLElement;
@@ -79,18 +80,21 @@ export class BingoDetailModal {
 
     this.currentCell = cell;
     this.titleElement.textContent = cell.text;
+    const isCustomOption = cell.optionId.startsWith('custom-');
+    const imageSrc = isCustomOption ? PLACEHOLDER_CAT_IMAGE : cell.imageSrc;
     this.imageElement.alt = cell.text;
+    this.imageElement.classList.remove('hidden');
     this.imageElement.removeAttribute('src');
     this.modalElement.classList.remove('hidden');
     this.modalElement.setAttribute('aria-hidden', 'false');
 
     try {
-      await this.preloadImage(cell.imageSrc);
+      await this.preloadImage(imageSrc);
     } catch {
       // Intentionally ignore image load failures so the modal still opens.
     }
 
-    this.imageElement.src = cell.imageSrc;
+    this.imageElement.src = imageSrc;
 
     if (cell.isFree) {
       this.toggleButton.hidden = true;

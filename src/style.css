@@ -85,6 +85,12 @@ button:focus-visible {
   line-height: 1;
 }
 
+.landing-icon-inner svg {
+  width: 42px;
+  height: 42px;
+  stroke-width: 1.75px;
+}
+
 .landing-copy {
   display: flex;
   flex-direction: column;
@@ -140,6 +146,37 @@ button:focus-visible {
   overflow: hidden;
 }
 
+.settings-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: 18px 14px calc(20px + env(safe-area-inset-bottom));
+  overflow: hidden;
+  transform: translateX(100%);
+  transition: transform 280ms ease;
+}
+
+.settings-screen.is-active {
+  transform: translateX(0);
+}
+
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 560px);
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.board-topbar.settings-topbar {
+  width: calc(100% - 8px);
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -171,33 +208,101 @@ button:focus-visible {
   padding: 4px;
 }
 
-.board-header {
+.board-topbar {
   display: grid;
-  flex: 0 0 auto;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 9px;
+  align-items: center;
   width: min(100%, 430px);
+  min-height: 52px;
   margin: 0 auto 8px;
-  padding: 0 12px;
-  min-height: 1.35rem;
+  padding: 0 13px;
+}
+
+.board-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 52px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.board-logo svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 1.8px;
+}
+
+.board-topbar-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 52px;
   color: #4b5563;
   font-size: 1.35rem;
   font-weight: 800;
   line-height: 1;
-  letter-spacing: 0.08em;
-  text-align: center;
+}
+
+.board-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  margin-bottom: calc(156px + env(safe-area-inset-bottom));
+}
+
+.settings-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #4b5563;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 400;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease, color 140ms ease;
+  transform: none;
+}
+
+.settings-button:hover {
+  background: rgba(17, 24, 39, 0.06);
+  color: #111827;
+}
+
+.settings-button:active {
+  transform: scale(0.97);
+}
+
+.settings-button svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8px;
 }
 
 .board-new-game {
+  flex: 0 1 200px;
   align-self: center;
-  width: min(100%, 320px);
+  width: auto;
+  min-width: 0;
   margin-top: auto;
-  margin-bottom: calc(56px + env(safe-area-inset-bottom));
   border: 0;
   border-radius: 999px;
   background: #111827;
   color: white;
-  padding: 14px 24px;
+  padding: 14px 22px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 8px 16px rgba(17, 24, 39, 0.16);
@@ -218,12 +323,25 @@ button:focus-visible {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform: translateX(0);
+  transition: opacity 220ms ease, visibility 220ms ease, transform 280ms ease;
 }
 
 #game-screen.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+}
+
+#game-screen.is-sliding-left {
+  transform: translateX(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #game-screen,
+  .settings-screen {
+    transition-duration: 1ms;
+  }
 }
 
 .bingo-overlay {
@@ -423,6 +541,10 @@ button:focus-visible {
   transition: opacity 220ms ease, visibility 220ms ease;
 }
 
+.settings-reset-confirmation {
+  z-index: 40;
+}
+
 .confirmation-modal.hidden {
   display: none;
 }
@@ -461,10 +583,232 @@ button:focus-visible {
   line-height: 1.25;
 }
 
+.confirmation-dialog p {
+  margin: -12px 0 24px;
+  color: #4b5563;
+  text-align: center;
+  font-size: 0.92rem;
+}
+
+.settings-reset-confirmation .confirmation-dialog h2,
+.settings-reset-confirmation .confirmation-dialog p {
+  text-align: left;
+}
+
 .confirmation-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.settings-reset-confirm {
+  background: #dc2626;
+}
+
+.add-option-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+.add-option-modal.hidden {
+  display: none;
+}
+
+.add-option-modal.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.settings-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.52);
+}
+
+.settings-dialog {
+  position: relative;
+  width: min(100%, 420px);
+  max-height: min(78vh, 620px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 18px 18px;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 220ms ease;
+}
+
+.add-option-modal.is-visible .settings-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.settings-count {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.settings-back,
+.settings-add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #4b5563;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.settings-back:hover,
+.settings-add-button:hover {
+  background: rgba(17, 24, 39, 0.06);
+  color: #111827;
+}
+
+.settings-back svg,
+.settings-add-button svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8px;
+}
+
+.settings-helper,
+.settings-error {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+
+.settings-error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.settings-count,
+.settings-helper,
+.settings-error {
+  padding-left: 43px;
+}
+
+.settings-list {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  overflow-y: auto;
+  padding-left: 23px;
+  padding-right: 4px;
+  margin-bottom: 24px;
+}
+
+.add-option-modal {
+  z-index: 45;
+}
+
+.add-option-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.add-option-form input {
+  width: 100%;
+  margin-bottom: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+}
+
+.add-option-form input:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.add-option-error {
+  margin: -10px 0 16px;
+  color: #b91c1c;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 430px);
+  margin: 0 auto calc(156px + env(safe-area-inset-bottom));
+}
+
+.settings-reset {
+  background: #dc2626;
+}
+
+.settings-add-button {
+  justify-self: center;
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #111827;
+}
+
+.settings-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: #111827;
+}
+
+.settings-option span {
+  overflow-wrap: anywhere;
+}
+
+.modal-action.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .cell {
@@ -487,16 +831,16 @@ button:focus-visible {
   -webkit-tap-highlight-color: transparent;
 }
 
-.cell:hover {
+.cell:not(.free):hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
 }
 
-.cell:active {
+.cell:not(.free):active {
   transform: translateY(0) scale(0.98);
 }
 
-.cell:focus-visible {
+.cell:not(.free):focus-visible {
   outline: 3px solid #2563eb;
   outline-offset: 2px;
 }
@@ -522,10 +866,17 @@ button:focus-visible {
 }
 
 .cell.free {
-  background: #f7c948;
-  color: #111827;
-  border-color: #d9a91f;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28), 0 3px 6px rgba(161, 98, 7, 0.16);
+  cursor: default;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-color: #d1d5db;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72), 0 2px 4px rgba(15, 23, 42, 0.06);
+}
+
+.free-cell-icon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8px;
 }
 
 @media (min-width: 600px) {
@@ -535,6 +886,10 @@ button:focus-visible {
     margin-top: 18px;
     border-radius: 22px;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  }
+
+  .settings-actions {
+    margin-bottom: 38px;
   }
 
   .cell {

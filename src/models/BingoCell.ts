@@ -1,3 +1,5 @@
+import { PLACEHOLDER_CAT_IMAGE } from '../consts/sampleItems';
+
 export class BingoCell {
   public readonly id: string;
   public readonly optionId: string;
@@ -10,7 +12,7 @@ export class BingoCell {
     id,
     optionId = id,
     text,
-    imageSrc = '/assets/cats/orange%20cat.png',
+    imageSrc = PLACEHOLDER_CAT_IMAGE,
     marked = false,
     isFree = false,
   }: {
@@ -34,7 +36,7 @@ export class BingoCell {
       id: `cell-${index}`,
       optionId: 'free',
       text: 'FREE',
-      imageSrc: '/assets/cats/orange%20cat.png',
+      imageSrc: PLACEHOLDER_CAT_IMAGE,
       marked: true,
       isFree: true,
     });

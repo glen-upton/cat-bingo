@@ -8,13 +8,14 @@
       name="description"
       content="A cat-spotting bingo game for the Azores."
     />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <div id="app" class="app-root">
       <section id="landing-screen" class="screen landing-screen" aria-label="Cat Bingo landing screen">
         <div class="landing-icon" aria-hidden="true">
-          <span class="landing-icon-inner">🐾</span>
+          <span class="landing-icon-inner"><i data-lucide="cat" aria-hidden="true"></i></span>
         </div>
 
         <div class="landing-copy">
@@ -26,16 +27,18 @@
 
       <main id="game-screen" class="screen app-shell" aria-label="Cat Bingo board screen">
         <section class="board-wrapper">
-          <div class="board-header" aria-hidden="true">
-            <span>B</span>
-            <span>I</span>
-            <span>N</span>
-            <span>G</span>
-            <span>O</span>
+          <div class="board-topbar" aria-label="Game header">
+            <span class="board-logo" role="img" aria-label="Cat"><i data-lucide="cat" aria-hidden="true"></i></span>
+            <span class="board-topbar-letter">C</span>
+            <span class="board-topbar-letter">A</span>
+            <span class="board-topbar-letter">T</span>
+            <button id="settings-button" type="button" class="settings-button" aria-label="Open game settings" title="Settings"><i data-lucide="settings" aria-hidden="true"></i></button>
           </div>
           <div id="board" class="board" aria-label="Bingo board"></div>
         </section>
-        <button id="board-new-game" type="button" class="board-new-game">New Game</button>
+        <div class="board-actions">
+          <button id="board-new-game" type="button" class="board-new-game">New Game</button>
+        </div>
       </main>
 
       <div id="bingo-overlay" class="bingo-overlay" aria-hidden="true">
@@ -53,11 +56,59 @@
         </div>
       </div>
 
+      <div id="settings-reset-confirmation" class="confirmation-modal settings-reset-confirmation hidden" aria-hidden="true">
+        <div class="confirmation-backdrop"></div>
+        <div class="confirmation-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-reset-confirmation-title" aria-describedby="settings-reset-confirmation-description">
+          <h2 id="settings-reset-confirmation-title">Are you sure you want to restore the default cats?</h2>
+          <p id="settings-reset-confirmation-description">All default cats will be made visible and player added cats will be removed.</p>
+          <div class="confirmation-actions">
+            <button id="settings-reset-cancel" type="button" class="result-button result-button-secondary">Cancel</button>
+            <button id="settings-reset-confirm" type="button" class="result-button result-button-primary settings-reset-confirm">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="settings-screen" class="screen settings-screen hidden" aria-label="Game settings" aria-hidden="true">
+        <div class="settings-page">
+          <div class="board-topbar settings-topbar" role="group" aria-label="Settings header">
+            <button id="settings-close" type="button" class="settings-back" aria-label="Back to game" title="Back to game"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
+            <span class="board-topbar-letter">C</span>
+            <span class="board-topbar-letter">A</span>
+            <span class="board-topbar-letter">T</span>
+            <button id="settings-add" type="button" class="settings-add-button" aria-label="Add bingo option" title="Add bingo option"><i data-lucide="plus" aria-hidden="true"></i></button>
+          </div>
+          <p id="settings-count" class="settings-count" aria-live="polite"></p>
+          <p class="settings-helper">At least 24 cats must be selected</p>
+          <p id="settings-error" class="settings-error" hidden>You must keep at least 24 cats selected.</p>
+          <div id="settings-list" class="settings-list"></div>
+          <div class="settings-actions">
+            <button id="settings-reset" type="button" class="board-new-game settings-reset">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <div id="add-option-modal" class="add-option-modal hidden" aria-hidden="true">
+        <div class="settings-backdrop"></div>
+        <div class="settings-dialog add-option-dialog" role="dialog" aria-modal="true" aria-labelledby="add-option-title">
+          <div class="settings-header">
+            <h2 id="add-option-title">Add Cat</h2>
+          </div>
+          <form id="add-option-form" class="add-option-form">
+            <input id="add-option-input" type="text" maxlength="60" autocomplete="off" aria-label="Cat name" aria-describedby="add-option-error" required />
+            <p id="add-option-error" class="add-option-error" role="status" hidden>That cat already exists</p>
+            <div class="confirmation-actions">
+              <button id="add-option-cancel" type="button" class="result-button result-button-secondary">Hiss</button>
+              <button type="submit" class="result-button result-button-primary">Meow</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div id="cell-detail-modal" class="modal hidden" aria-hidden="true">
         <div class="modal-backdrop" data-close="true"></div>
         <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="detail-title">
           <h2 id="detail-title">Item title</h2>
-          <img class="modal-image" src="assets/cats/orange%20cat.png" alt="Orange cat" />
+          <img class="modal-image" src="%BASE_URL%assets/cats/cat%20placeholder.png" alt="Cat placeholder" />
           <button id="detail-toggle" type="button" class="modal-action">Mark as complete</button>
         </div>
       </div>
