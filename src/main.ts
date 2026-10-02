@@ -1,4 +1,4 @@
-import { createIcons, Cat, ChevronLeft, Plus, Settings } from 'lucide';
+import { createIcons, Cat, ChevronLeft, PawPrint, Plus, Settings } from 'lucide';
 import { PLACEHOLDER_CAT_IMAGE, SAMPLE_ITEMS } from './consts/sampleItems';
 import { GameStorage } from './storage/GameStorage';
 import { BingoManager } from './managers/BingoManager';
@@ -54,7 +54,7 @@ const detailModal = new BingoDetailModal({
 });
 
 detailModal.preloadImages([...SAMPLE_ITEMS.map((item) => item.imageSrc), PLACEHOLDER_CAT_IMAGE]);
-createIcons({ icons: { Cat, ChevronLeft, Plus, Settings } });
+createIcons({ icons: { Cat, ChevronLeft, PawPrint, Plus, Settings } });
 
 const newGameConfirmationModal = new ConfirmationModal({
   modalElement: confirmationModalElement,
